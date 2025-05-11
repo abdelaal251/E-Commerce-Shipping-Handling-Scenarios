@@ -1,0 +1,43 @@
+sequenceDiagram
+    title User Order Overview – Multiple Shipments and Payments per Order
+
+    participant User
+    participant OrderService as Order
+    participant Inventory as Stock
+    participant Shipping as Shipping
+    participant Payment as Payment
+
+    User->>Order: Place order
+    Order->>Stock: Reserve stock for items
+    Stock-->>Order: Stock reserved
+
+    Order->>Payment: Create initial payment request
+    Payment-->>Order: Payment confirmed
+
+    Order->>Shipping: Create initial shipment
+    Shipping-->>Order: Shipment created
+    Shipping-->>User: Deliver initial shipment
+
+    Note over User,Order: Later, user reports missing items
+
+    Order->>Stock: Reserve stock for missing items
+    Stock-->>Order: Stock reserved
+    Order->>Shipping: Create extra shipment
+    Shipping-->>User: Deliver missing items
+
+    Note over User,Order: User returns an extra item
+
+    Order->>Shipping: Create return shipment
+    Shipping-->>User: Collect extra item
+    Shipping->>Stock: Return item
+    Stock-->>Order: Stock updated
+
+    Note over User,Order: User replaces an item
+
+    Order->>Stock: Reserve new item, release old item
+    Stock-->>Order: Stock updated
+
+    Order->>Payment: Process price difference (refund or charge)
+    Payment-->>Order: Billing adjusted
+
+    Order-->>User: Updated order with multiple shipments and bills
