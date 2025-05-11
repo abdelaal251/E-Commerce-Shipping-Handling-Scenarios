@@ -1,0 +1,30 @@
+sequenceDiagram
+    title Refund After Delivery – Return Shipment and Refund
+
+    participant User
+    participant OrderService as Order
+    participant Inventory as Stock
+    participant Shipping as Shipping
+    participant Payment as Payment
+
+    User->>Order: Place order
+    Order->>Stock: Reserve stock for ordered items
+    Stock-->>Order: Stock reserved
+
+    Order->>Shipping: Create shipment for reserved items
+    Shipping-->>Order: Shipment created
+
+    Shipping-->>User: Deliver shipment
+    User-->>Order: Request refund for delivered items
+
+    Order->>Shipping: Create reverse shipment to collect items
+    Shipping-->>Order: Reverse shipment created
+
+    Shipping-->>User: Collect items
+    Shipping->>Stock: Return collected items (after inspection)
+    Stock-->>Order: Stock updated
+
+    Order->>Payment: Initiate refund request with billing details
+    Payment-->>Order: Refund processed
+
+    Order-->>User: Refund confirmed
