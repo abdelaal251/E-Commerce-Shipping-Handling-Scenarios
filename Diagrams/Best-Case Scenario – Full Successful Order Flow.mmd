@@ -1,0 +1,19 @@
+sequenceDiagram
+    title Best-Case Scenario – Full Successful Order Flow
+
+    participant User
+    participant OrderService as Order
+    participant Inventory as Stock
+    participant Shipping as Shipping
+
+    User->>Order: Place order
+    Order->>Stock: Reserve stock for ordered items
+    Stock-->>Order: Stock reserved
+
+    Order->>Shipping: Create shipment for reserved items
+    Shipping-->>Order: Shipment created
+
+    Shipping-->>User: Deliver shipment
+    User-->>Order: Confirm order received
+
+    Order-->>User: Order marked as complete
