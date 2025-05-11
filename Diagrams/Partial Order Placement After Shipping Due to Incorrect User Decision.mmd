@@ -1,0 +1,33 @@
+sequenceDiagram
+    title Partial Order Placement After Shipping Due to Incorrect User Decision
+
+    participant User
+    participant OrderService as Order
+    participant Inventory as Stock
+    participant Shipping as Shipping
+    participant Payment as Payment
+
+    User->>Order: Place order
+    Order->>Stock: Reserve stock for all items
+    Stock-->>Order: Stock reserved
+
+    User-->>Order: Cancel some items before shipment
+    Order->>Stock: Release reserved stock for cancelled items
+    Stock-->>Order: Partial stock released
+
+    Order->>Shipping: Create shipment for remaining items
+    Shipping-->>Order: Shipment created
+    Shipping-->>User: Deliver shipment
+
+    User-->>Order: Requests to re-add previously cancelled items
+    Order->>Stock: Check and reserve stock
+    Stock-->>Order: Stock reserved
+
+    Order->>Payment: Initiate new payment for re-added items
+    Payment-->>Order: Payment confirmed
+
+    Order->>Shipping: Create second shipment
+    Shipping-->>Order: Shipment created
+    Shipping-->>User: Deliver additional items
+
+    Order-->>User: Order updated with new shipment and payment
