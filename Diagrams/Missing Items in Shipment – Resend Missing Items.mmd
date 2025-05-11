@@ -1,0 +1,28 @@
+sequenceDiagram
+    title Missing Items in Shipment – Resend Missing Items
+
+    participant User
+    participant OrderService as Order
+    participant Inventory as Stock
+    participant Shipping as Shipping
+
+    User->>Order: Place order
+    Order->>Stock: Reserve stock for ordered items
+    Stock-->>Order: Stock reserved
+
+    Order->>Shipping: Create shipment for reserved items
+    Shipping-->>Order: Shipment created
+
+    Shipping-->>User: Deliver shipment
+    User-->>Order: Report missing items
+
+    Order->>Stock: Reserve stock for missing items
+    Stock-->>Order: Missing stock reserved
+
+    Order->>Shipping: Create new shipment for missing items
+    Shipping-->>Order: Shipment created
+
+    Shipping-->>User: Deliver missing items
+    User-->>Order: Confirm full order received
+
+    Order-->>User: Order marked as complete
