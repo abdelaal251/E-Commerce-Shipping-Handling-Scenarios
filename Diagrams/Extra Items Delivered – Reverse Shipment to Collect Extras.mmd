@@ -1,0 +1,24 @@
+sequenceDiagram
+    title Extra Items Delivered – Reverse Shipment to Collect Extras
+
+    participant User
+    participant OrderService as Order
+    participant Inventory as Stock
+    participant Shipping as Shipping
+
+    User->>Order: Place order
+    Order->>Stock: Reserve stock for ordered items
+    Stock-->>Order: Stock reserved
+
+    Order->>Shipping: Create shipment for reserved items
+    Shipping-->>Order: Shipment created
+
+    Shipping-->>User: Deliver shipment (includes extra items)
+    User-->>Order: Report extra items received
+
+    Order->>Shipping: Create reverse shipment to collect extras
+    Shipping-->>Order: Reverse shipment created
+
+    Shipping-->>User: Collect extra items
+    Shipping->>Stock: Return collected items
+    Stock-->>Order: Stock updated
