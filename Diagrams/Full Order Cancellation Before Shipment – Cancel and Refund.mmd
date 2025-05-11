@@ -1,0 +1,17 @@
+sequenceDiagram
+    title Full Order Cancellation Before Shipment – Cancel and Refund
+
+    participant User
+    participant OrderService as Order
+    participant Inventory as Stock
+    participant Shipping as Shipping
+
+    User->>Order: Place order
+    Order->>Stock: Reserve stock for ordered items
+    Stock-->>Order: Stock reserved
+
+    User-->>Order: Request to cancel entire order (before shipment)
+    Order->>Stock: Release reserved stock
+    Stock-->>Order: Stock released
+
+    Order-->>User: Order cancelled and refund issued
