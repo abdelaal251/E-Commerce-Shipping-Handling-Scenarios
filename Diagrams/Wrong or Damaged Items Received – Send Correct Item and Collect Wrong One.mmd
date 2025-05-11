@@ -1,0 +1,27 @@
+sequenceDiagram
+    title Wrong or Damaged Items Received – Send Correct Item and Collect Wrong One
+
+    participant User
+    participant OrderService as Order
+    participant Inventory as Stock
+    participant Shipping as Shipping
+
+    User->>Order: Place order
+    Order->>Stock: Reserve stock for ordered items
+    Stock-->>Order: Stock reserved
+
+    Order->>Shipping: Create shipment for reserved items
+    Shipping-->>Order: Shipment created
+
+    Shipping-->>User: Deliver shipment (includes wrong/damaged items)
+    User-->>Order: Report wrong or damaged items
+
+    Order->>Stock: Reserve stock for correct items
+    Stock-->>Order: Correct stock reserved
+
+    Order->>Shipping: Create send-and-return shipment
+    Shipping-->>Order: Shipment created
+
+    Shipping-->>User: Deliver correct items & collect wrong ones
+    Shipping->>Stock: Return collected wrong items (inspect/approve)
+    Stock-->>Order: Stock updated
