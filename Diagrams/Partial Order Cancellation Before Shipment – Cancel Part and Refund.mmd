@@ -1,0 +1,21 @@
+sequenceDiagram
+    title Partial Order Cancellation Before Shipment – Cancel Part and Refund
+
+    participant User
+    participant OrderService as Order
+    participant Inventory as Stock
+    participant Shipping as Shipping
+    participant Payment as Payment
+
+    User->>Order: Place order
+    Order->>Stock: Reserve stock for ordered items
+    Stock-->>Order: Stock reserved
+
+    User-->>Order: Request to cancel part of the order (before shipment)
+    Order->>Stock: Release reserved stock for cancelled items
+    Stock-->>Order: Partial stock released
+
+    Order->>Payment: Initiate partial refund request with billing details
+    Payment-->>Order: Refund processed
+
+    Order-->>User: Partial cancellation confirmed and refund issued
